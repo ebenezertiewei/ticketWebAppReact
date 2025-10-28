@@ -1,0 +1,59 @@
+/* ------------------------------------------------------------------ */
+@import "tailwindcss";
+
+@layer base {
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		outline: none;
+		user-select: none;
+	}
+
+	html {
+		font-size: 16px;
+	}
+
+	body {
+		@apply font-sans text-[#0a2540] bg-white;
+		width: 100dvw;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.ticketHub {
+		max-width: 1440px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #d6dcff;
+		/* background-color: #d6dcff85; */
+	}
+
+	/* feature cards */
+	.feature-card {
+		@apply bg-blue-400 text-[1.2rem] rounded-lg shadow-md p-6 m-4 transition-transform transform hover:scale-105;
+	}
+	.feature-card h3 {
+		@apply text-[1.2rem] font-semibold border-b-2 border-orange-500 mb-2 text-center mx-auto w-fit;
+	}
+	.feature-card p {
+		@apply text-center;
+	}
+}
+/* For autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	background-color: white !important;
+	-webkit-box-shadow: 0 0 0px 1000px #1c1860 inset !important;
+	-webkit-text-fill-color: #eae4d5 !important;
+	transition: background-color 9999s ease-in-out 0s;
+}
+
+@media (max-width: 768px) {
+	html {
+		font-size: 14px;
+	}
+}
