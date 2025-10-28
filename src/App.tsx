@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-import Dashboard from "./pages/Dashboard";
-import TicketManagement from "./pages/TicketManagement";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import LandingPage from "./pages/LandingPage.js";
+import LoginPage from "./pages/LoginPage.js";
+import SignupPage from "./pages/SignupPage.js";
+import Dashboard from "./pages/Dashboard.js";
+import TicketManagement from "./pages/TicketManagement.js";
+import ProtectedRoute from "./components/ProtectedRoute.js";
+import Header from "./components/Header.js";
+import Footer from "./components/Footer.js";
 
 export default function App() {
 	return (

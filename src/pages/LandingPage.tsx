@@ -53,7 +53,7 @@ export default function LandingPage() {
 								Key Features
 							</h2>
 						</div>
-						<div className="feature-grid">
+						<div className="feature-grid flex flex-col items-center justify-center gap-6 lg:flex-row lg:flex-wrap lg:justify-center lg:items-stretch">
 							<div className="feature-card">
 								<h3>Easy Ticket Creation</h3>
 								<p>

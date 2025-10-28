@@ -17,8 +17,13 @@
 	body {
 		@apply font-sans text-[#0a2540] bg-white;
 		width: 100dvw;
+		min-height: 100dvh;
 		display: flex;
 		flex-direction: column;
+	}
+
+	main {
+		min-height: calc(100dvh - (10rem + 3.5rem));
 	}
 
 	.ticketHub {
@@ -27,16 +32,17 @@
 		justify-content: center;
 		align-items: center;
 		background-color: #d6dcff;
-		/* background-color: #d6dcff85; */
+		position: relative;
 	}
 
-	/* feature cards */
 	.feature-card {
-		@apply bg-blue-400 text-[1.2rem] rounded-lg shadow-md p-6 m-4 transition-transform transform hover:scale-105;
+		@apply bg-blue-400 text-[1.2rem] rounded-lg shadow-md p-6 m-4 w-[90%] lg:w-[18rem] transition-transform transform hover:scale-105;
 	}
+
 	.feature-card h3 {
 		@apply text-[1.2rem] font-semibold border-b-2 border-orange-500 mb-2 text-center mx-auto w-fit;
 	}
+
 	.feature-card p {
 		@apply text-center;
 	}
