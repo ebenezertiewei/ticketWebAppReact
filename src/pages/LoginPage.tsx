@@ -1,7 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 import HeroBackground from "../components/HeroBackground";
 
 export default function LoginPage() {
+	const navigate = useNavigate();
+	const { login } = useAuth();
+
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
@@ -16,6 +21,7 @@ export default function LoginPage() {
 		email: "Please enter a valid email (e.g. you@example.com)",
 		password: "Password must be at least 6 characters",
 	};
+
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
@@ -55,9 +61,20 @@ export default function LoginPage() {
 		setHints({});
 
 		if (valid) {
-			setSuccess(true);
-			setFormData({ email: "", password: "" });
-			setTimeout(() => setSuccess(false), 3000);
+			// Call the login function from AuthContext
+			const result = login(formData.email, formData.password);
+
+			if (result.success) {
+				setSuccess(true);
+				setFormData({ email: "", password: "" });
+
+				// Navigate to dashboard after a brief success message
+				setTimeout(() => {
+					navigate("/dashboard");
+				}, 500);
+			} else {
+				setErrors({ email: result.error || "Login failed" });
+			}
 		} else {
 			setSuccess(false);
 		}
@@ -126,7 +143,9 @@ export default function LoginPage() {
 				</button>
 				{/* Success message */}
 				{success && (
-					<p className="text-green-500 mb-4 text-center">Login successful!</p>
+					<p className="text-green-500 mt-4 text-center">
+						Login successful! Redirecting...
+					</p>
 				)}
 			</form>
 		</div>

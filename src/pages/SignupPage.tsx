@@ -1,14 +1,22 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 import HeroBackground from "../components/HeroBackground";
 
 // ✅ 1. Define your types
-type FormField = "firstName" | "lastName" | "email" | "password";
+type FormField =
+	| "firstName"
+	| "lastName"
+	| "email"
+	| "password"
+	| "confirmPassword";
 
 interface FormData {
 	firstName: string;
 	lastName: string;
 	email: string;
 	password: string;
+	confirmPassword: string;
 }
 
 interface FormErrors {
@@ -16,6 +24,7 @@ interface FormErrors {
 	lastName?: string;
 	email?: string;
 	password?: string;
+	confirmPassword?: string;
 }
 
 interface FormHints {
@@ -23,27 +32,34 @@ interface FormHints {
 	lastName?: string;
 	email?: string;
 	password?: string;
+	confirmPassword?: string;
 }
 
 // ✅ 2. Component
 export default function SignupPage() {
+	const navigate = useNavigate();
+	const { signup } = useAuth();
+
 	const [formData, setFormData] = useState<FormData>({
 		firstName: "",
 		lastName: "",
 		email: "",
 		password: "",
+		confirmPassword: "",
 	});
 
 	const [errors, setErrors] = useState<FormErrors>({});
 	const [success, setSuccess] = useState(false);
 	const [hints, setHints] = useState<FormHints>({});
 	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	const hintMessages: Record<FormField, string> = {
 		firstName: "Please enter your first name",
 		lastName: "Please enter your last name",
 		email: "Please enter a valid email (e.g. you@example.com)",
 		password: "Password must be at least 6 characters",
+		confirmPassword: "Re-enter your password to confirm",
 	};
 
 	// ✅ 3. Handle input change
@@ -92,13 +108,40 @@ export default function SignupPage() {
 			valid = false;
 		}
 
+		if (!formData.confirmPassword.trim()) {
+			newErrors.confirmPassword = "Please confirm your password";
+			valid = false;
+		} else if (formData.password !== formData.confirmPassword) {
+			newErrors.confirmPassword = "Passwords do not match";
+			valid = false;
+		}
+
 		setErrors(newErrors);
 		setHints({});
 
 		if (valid) {
-			setSuccess(true);
-			setFormData({ firstName: "", lastName: "", email: "", password: "" });
-			setTimeout(() => setSuccess(false), 3000);
+			const result = signup(
+				formData.email,
+				formData.password,
+				formData.confirmPassword
+			);
+
+			if (result.success) {
+				setSuccess(true);
+				setFormData({
+					firstName: "",
+					lastName: "",
+					email: "",
+					password: "",
+					confirmPassword: "",
+				});
+
+				setTimeout(() => {
+					navigate("/dashboard");
+				}, 500);
+			} else {
+				setErrors({ email: result.error || "Signup failed" });
+			}
 		} else {
 			setSuccess(false);
 		}
@@ -171,7 +214,7 @@ export default function SignupPage() {
 				</div>
 
 				{/* Password */}
-				<div className="form-group mb-6 relative">
+				<div className="form-group mb-4 relative">
 					<label htmlFor="password" className="block mb-1">
 						Password <span className="text-orange-500">*</span>
 					</label>
@@ -198,8 +241,40 @@ export default function SignupPage() {
 					</small>
 				</div>
 
+				{/* Confirm Password */}
+				<div className="form-group mb-6 relative">
+					<label htmlFor="confirmPassword" className="block mb-1">
+						Confirm Password <span className="text-orange-500">*</span>
+					</label>
+					<div className="relative">
+						<input
+							type={showConfirmPassword ? "text" : "password"}
+							id="confirmPassword"
+							name="confirmPassword"
+							value={formData.confirmPassword}
+							onChange={handleChange}
+							className="w-full border px-3 py-2 rounded pr-10"
+						/>
+						<button
+							type="button"
+							onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+							className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"
+							aria-label={
+								showConfirmPassword ? "Hide password" : "Show password"
+							}
+						>
+							{showConfirmPassword ? "👁️" : "🙈"}
+						</button>
+					</div>
+					<small className="text-orange-500">
+						{errors.confirmPassword || hints.confirmPassword}
+					</small>
+				</div>
+
 				{success && (
-					<p className="text-green-500 mb-4 text-center">Signup successful!</p>
+					<p className="text-green-500 mb-4 text-center">
+						Signup successful! Redirecting...
+					</p>
 				)}
 
 				<button
@@ -208,6 +283,16 @@ export default function SignupPage() {
 				>
 					Sign Up
 				</button>
+
+				<p className="text-center mt-4 text-gray-700">
+					Already have an account?{" "}
+					<Link
+						to="/auth/login"
+						className="text-orange-500 hover:underline font-semibold"
+					>
+						Login here
+					</Link>
+				</p>
 			</form>
 		</div>
 	);

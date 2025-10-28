@@ -1,10 +1,18 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 export default function Header() {
 	const location = useLocation();
+	const navigate = useNavigate();
+	const { user, logout } = useAuth();
 
 	const isAuthPage =
 		location.pathname === "/auth/signup" || location.pathname === "/auth/login";
+
+	const handleLogOut = () => {
+		logout();
+		navigate("/auth/login");
+	};
 
 	return (
 		<div className="ticketHub">
@@ -19,32 +27,41 @@ export default function Header() {
 					</Link>
 				</h1>
 
-				{isAuthPage ? (
-					// Wrap Home in a nav so it aligns like other links
-					<nav className="flex justify-end items-center gap-x-1 text-[1.2rem] header-nav">
+				<nav className="flex justify-end items-center gap-x-1 text-[1.2rem] header-nav">
+					{/* If on signup or login page → show Home link */}
+					{isAuthPage ? (
 						<Link
 							to="/"
 							className="border-t-2 border-b-2 border-orange-500 hover:bg-orange-500 hover:text-white py-1 px-2 rounded-md font-semibold transition-colors duration-300 ease-in-out"
 						>
 							Home
 						</Link>
-					</nav>
-				) : (
-					<nav className="flex justify-end items-center gap-x-1 text-[1.2rem] header-nav">
-						<Link
-							to="/auth/signup"
-							className="border-t-2 border-b-2 border-orange-500 hover:bg-orange-500 hover:text-white py-1 px-2 rounded-md font-semibold transition-colors duration-300 ease-in-out"
+					) : user ? (
+						// If logged in → show Log Out
+						<button
+							onClick={handleLogOut}
+							className="border-t-2 border-b-2 border-orange-500 hover:bg-orange-500 hover:text-white py-1 px-3 rounded-md font-semibold transition-colors duration-300 ease-in-out"
 						>
-							Sign Up
-						</Link>
-						<Link
-							to="/auth/login"
-							className="border-t-2 border-b-2 border-orange-500 hover:bg-orange-500 hover:text-white py-1 px-2 rounded-md font-semibold transition-colors duration-300 ease-in-out"
-						>
-							Login
-						</Link>
-					</nav>
-				)}
+							Log Out
+						</button>
+					) : (
+						// Otherwise → show Sign Up & Login
+						<>
+							<Link
+								to="/auth/signup"
+								className="border-t-2 border-b-2 border-orange-500 hover:bg-orange-500 hover:text-white py-1 px-2 rounded-md font-semibold transition-colors duration-300 ease-in-out"
+							>
+								Sign Up
+							</Link>
+							<Link
+								to="/auth/login"
+								className="border-t-2 border-b-2 border-orange-500 hover:bg-orange-500 hover:text-white py-1 px-2 rounded-md font-semibold transition-colors duration-300 ease-in-out"
+							>
+								Login
+							</Link>
+						</>
+					)}
+				</nav>
 			</header>
 		</div>
 	);
