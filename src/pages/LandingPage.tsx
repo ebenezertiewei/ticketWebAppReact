@@ -1,5 +1,5 @@
 import vectorOrange from "../assets/vector-orange.png";
-import vectorBlue from "../assets/Vector-blue.png";
+import vectorBlue from "../assets/vector-blue.png";
 import heroWave from "../assets/hero-wave.svg";
 
 export default function LandingPage() {
